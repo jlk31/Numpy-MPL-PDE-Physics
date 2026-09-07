@@ -1,5 +1,5 @@
 #Plots acceleration vs velocity curves for bodies with different parameters
-#Using the drag equation, see here https://en.wikipedia.org/wiki/Drag_equation 
+#Using the drag equation, see here https://en.wikipedia.org/wiki/Drag_equation
 
 # Before running this check you have numpy and matplotlib installed by using pip freeze
 # and reading the output
@@ -31,24 +31,24 @@ def accel_func(thrust, mass, C_d, CS_area, fluid_density, velocity):
 #drag coefficient 0.6 represents a boxy SUV eg Range Rover
 #details here https://en.wikipedia.org/wiki/Drag_coefficient
 #The 3 values here means the graph will have 3 lines. if you add more values to this list they will be automagically plotted.
-DRAG_COEFFICIENTS = [0.4, 0.6, 0.8]               
+DRAG_COEFFICIENTS = [0.4, 0.6, 0.8]
 
 #cross sectional area in m^2
-CS_area = 3             
+CS_area = 3
 
 #fluid density in kgm^-3, 1.225 for air. If you want your body to move through something different, change this value.
-fluid_density = 1.225   
+fluid_density = 1.225
 
 #relative wind in ms^-1   This will be the fastest the simulation will allow the body to go
 #Remember the body might not actually reach this speed if its terminal velocity is lower than that.
 #If the lines don't touch the x axis, increase this value
-velocity_max = 30 
+velocity_max = 30
 
 #mass of the moving body in kg
-mass = 2000             
+mass = 2000
 
 #Force propelling the body forwards in N
-thrust = 500            
+thrust = 500
 
 
 #------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ thrust = 500
 NO_OF_LINES = len(DRAG_COEFFICIENTS)
 
 #Create velocity values as 1x50 array.  Documentation for np.linspace is here: https://numpy.org/doc/stable/reference/generated/numpy.linspace.html
-velocity = np.linspace(0,velocity_max,50) 
+velocity = np.linspace(0,velocity_max,50)
 
 #calc acceleration values from velocity and put them in the list called "acceleration"
 
@@ -114,18 +114,21 @@ ax.yaxis.set_minor_locator(plt.MultipleLocator(0.01))
 
 
 #Draw the axis lines
+#NOTE: the first argument of ax.grid() was called "b" until matplotlib 3.5, where it
+#was renamed to "visible". The old "b=True" spelling was removed in matplotlib 3.7 and
+#now raises "ValueError: keyword grid_b is not recognized". See README.md.
 
 #draw the x axis major lines
-ax.grid(b=True, which='major', axis='x', linestyle='-', linewidth=2)
+ax.grid(visible=True, which='major', axis='x', linestyle='-', linewidth=2)
 
 #draw the x axis minor lines
-ax.grid(b=True, which='minor', axis='x', linestyle='-')
+ax.grid(visible=True, which='minor', axis='x', linestyle='-')
 
 #draw the y axis major lines
-ax.grid(b=True, which='major', axis='y', linestyle='-', linewidth=2)
+ax.grid(visible=True, which='major', axis='y', linestyle='-', linewidth=2)
 
 #draw the y axis minor lines
-ax.grid(b=True, which='minor', axis='y', linestyle='-')
+ax.grid(visible=True, which='minor', axis='y', linestyle='-')
 
 
 #------------------------------------------------------------------------------
@@ -141,11 +144,13 @@ for i in range(NO_OF_LINES):
 #plot the legend
 plt.legend(title = "Drag coefficient")
 
+#save the figure in the working directory.
+#NOTE: this must happen BEFORE plt.show(), because show() hands the figure to the GUI
+#and most backends clear it on close, which would save a blank image.
+plt.savefig("drag_graph_Cd.png")
+
 #render the plot on screen
 plt.show()
-
-#when the figure is closed, save the figure in the working directory.
-plt.savefig("drag_graph_Cd.png")
 
 
 #END----------------------------------------------------------------------------
